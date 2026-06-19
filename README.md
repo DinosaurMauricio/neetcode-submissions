@@ -21,3 +21,21 @@ if (num - 1) not in num_set:  # It's a starting point
     while (num + 1) in num_set:  # Just check they are there
         num += 1
 ```
+
+- **Boundary Tracking / Hash Map Lookup**
+We can keep track of the boundaries using hashmap. In the first step, we see if the current position already exists. In other words, we check if our neighbors already existed. If they do, it means I count myself and my neighbors that exist.
+
+Then we update our outer boundaries—telling them, "Yeah, I'm your neighbor now, so extend the total sequence length." This is what is happening in the steps `mp[num - mp[num - 1]] = mp[num]` and `mp[num + mp[num + 1]] = mp[num]` to update the absolute left and right edges. After that, it just updates the max value.
+
+```python
+def longestConsecutive(self, nums: List[int]) -> int:
+    mp = defaultdict(int)
+    res = 0
+
+    for num in nums:
+        if not mp[num]:
+            mp[num] = mp[num - 1] + mp[num + 1] + 1
+            mp[num - mp[num - 1]] = mp[num]
+            mp[num + mp[num + 1]] = mp[num]
+            res = max(res, mp[num])
+    return res
