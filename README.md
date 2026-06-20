@@ -39,3 +39,45 @@ def longestConsecutive(self, nums: List[int]) -> int:
             mp[num + mp[num + 1]] = mp[num]
             res = max(res, mp[num])
     return res
+
+- **Two Pointers (Sorted Arrays)**
+When a problem specifies a "non-decreasing" (e.g. [1,2,3,4]) or sorted array we can place one pointer at the start (`left`) and one at the end (`right`), we can confidently shrink our search space based on the current sum relative to a target:
+  * If `current_sum > target`: Move `right` inward to decrease the sum.
+  * If `current_sum < target`: Move `left` outward to increase the sum.
+
+```python
+def twoSum(nums: List[int], target: int) -> List[int]:
+    left, right = 0, len(nums) - 1
+    while left < right:
+        cur_sum = nums[left] + nums[right]
+        if cur_sum == target:
+            return [left, right]
+        elif cur_sum > target:
+            right -= 1
+        else:
+            left += 1
+```
+- **Binary Search & Overflow Prevention**
+Binary search cuts the search space in half each cycle, achieving O(log n) time complexity. 
+
+To calculate the midpoint without risking integer overflow (e.g., when adding two massive index values like `low + high`), use the subtraction offset method instead of the standard formula:
+   
+   $Standard (Risk of overflow):$ `(low + high) // 2`
+   
+   $Safe:$ `low + (high - low) // 2` (where `(high - low) // 2` is the distance, and `+ low` is the offset).
+
+If `mid` is not the target, we shift the boundaries to `mid + 1` or `mid - 1` because the current `mid` has already been checked.
+
+```python
+def binarySearch(nums: List[int], target: int) -> int:
+    low, high = 0, len(nums) - 1
+    while low <= high:
+        mid = low + (high - low) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            low = mid + 1      # Target is higher
+        else:
+            high = mid - 1     # Target is lower
+    return -1
+
