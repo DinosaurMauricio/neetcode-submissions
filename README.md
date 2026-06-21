@@ -39,6 +39,7 @@ def longestConsecutive(self, nums: List[int]) -> int:
             mp[num + mp[num + 1]] = mp[num]
             res = max(res, mp[num])
     return res
+```
 
 - **Two Pointers (Sorted Arrays)**
 When a problem specifies a "non-decreasing" (e.g. [1,2,3,4]) or sorted array we can place one pointer at the start (`left`) and one at the end (`right`), we can confidently shrink our search space based on the current sum relative to a target:
@@ -80,4 +81,22 @@ def binarySearch(nums: List[int], target: int) -> int:
         else:
             high = mid - 1     # Target is lower
     return -1
+```
 
+- **Horizontal Scanning (Longest Common Prefix)**
+Horizontal scanning checks a list of strings character-by-character (vertically) using the first word as a baseline. This avoids checking full words unnecessarily or worrying about their true sizes.
+
+We iterate through the index i of the first word and compare it across all other strings s. We stop and return the sliced prefix s[:i] the exact moment a mismatch occurs or a word runs out of letters.
+
+$The Stopper$ (i == len(s)): Handles shorter words. If index i hits the length of the current word, it means we ran out of letters to check. We stop here to prevent an IndexError.
+
+$The Break$ (s[i] != strs[0][i]): Triggers the moment a character doesn't match the baseline word.
+
+```python
+def longestCommonPrefix(self, strs: List[str]) -> str:
+    for i in range(len(strs[0])):
+        for s in strs:
+            if i == len(s) or s[i] != strs[0][i]:
+                return s[:i]
+    return strs[0]
+```
