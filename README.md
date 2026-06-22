@@ -58,6 +58,26 @@ def twoSum(nums: List[int], target: int) -> List[int]:
         else:
             left += 1
 ```
+
+- **Three pointers**
+We can scale the previous two-pointer logic to find three numbers that sum to a target (like 0) by fixing one number as a pivot and using two pointers for the rest of the array.
+
+Since the array is sorted, the biggest challange is to deal with duplicate numbers which cause duplicate results. We solve this by skipping identical values for both the pivot and the moving pointers.
+
+e.g. in [1,0,0,4,5]
+By the time the search reaches the double zero, the next iteration is going to find the same operation. To fix this, we can just check the previous element and ignore it if it exists to increase to the following element.
+
+
+```python
+# Skip duplicate pivots
+if i > 0 and nums[i] == nums[i - 1]:
+    continue
+
+# Skip duplicate left pointers (inside the while loop)
+while left < right and nums[left] == nums[left - 1]:
+    left += 1
+```
+
 - **Binary Search & Overflow Prevention**
 Binary search cuts the search space in half each cycle, achieving O(log n) time complexity. 
 
