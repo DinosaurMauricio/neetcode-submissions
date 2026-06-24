@@ -120,3 +120,23 @@ def longestCommonPrefix(self, strs: List[str]) -> str:
                 return s[:i]
     return strs[0]
 ```
+
+- **Boyer-Moore Voting Algorithm (Majority Element)** 
+Used to find the element that appears more than $\lfloor n/2 \rfloor$ times. Assumption: A majority element must exist, otherwise the result may be incorrect (e.g., [3,3,1,1] fails).The algorithm uses a candidate and a count. We iterate through the array, treating the process like a vote:
+
+If count == 0, we pick the current element as the new candidate.
+
+If the current element matches the candidate, count += 1.
+
+If it doesn't match, count -= 1 (the current element "cancels out" a vote for the candidate).
+
+```python
+def majorityElement(self, nums: List[int]) -> int:
+    count = 0
+    candidate = None
+    for num in nums:
+        if count == 0:
+            candidate = num
+        count += (1 if num == candidate else -1)
+    return candidate
+```
