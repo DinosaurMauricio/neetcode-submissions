@@ -140,3 +140,51 @@ def majorityElement(self, nums: List[int]) -> int:
         count += (1 if num == candidate else -1)
     return candidate
 ```
+
+- **Merge Sort**
+A divide-and-conquer **sorting** algorithm that guarantees a constant time complexity of $O(n \log n)$. It breaks the problem down into two main phases using recursion:
+
+ 1. **Divide:** Split the array in half at the middle index repeatedly until every subarray contains only a single element.
+ 2. **Conquer (Merge):** Recombine and sort the subarrays using a **3-pointer method**. We compare elements from two halves, place the smaller one into the original array, and once one half is exhausted, copy over the remaining elements.
+
+>Complexity Analysis
+>* **Divide O(log n):** We split the array of size $n$ in half repeatedly. This means we divide $n$ by $2$ a total of $x$ times until the size is $1$:
+>$$\frac{n}{2^x} = 1 \implies n = 2^x \implies x = \log_2 n$$
+>* **Merge O(n):** At each level of recursion, we must traverse and recombine all elements in the array.
+>* **Total Time Complexity:** Because the merge step depends on the division steps, the final time complexity is $O(n \log n)$.
+```python
+class Solution:
+    def sortArray(self, nums: List[int]) -> List[int]:
+        def merge(arr, L, M, R):
+            left, right = arr[L:M+1], arr[M+1:R+1]
+            i, j, k = L, 0, 0
+
+            while j < len(left) and k < len(right):
+                if left[j] <= right[k]:
+                    arr[i] = left[j]
+                    j += 1
+                else:
+                    arr[i] = right[k]
+                    k += 1
+                i += 1
+
+            while j < len(left):
+                arr[i] = left[j]
+                j += 1
+                i += 1
+
+            while k < len(right):
+                arr[i] = right[k]
+                k += 1
+                i += 1
+
+        def mergeSort(arr, l, r):
+            if l >= r:
+                return
+            m = (l + r) // 2
+            mergeSort(arr, l, m)
+            mergeSort(arr, m + 1, r)
+            merge(arr, l, m, r)
+
+        mergeSort(nums, 0, len(nums) - 1)
+        return nums
