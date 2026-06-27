@@ -188,3 +188,51 @@ class Solution:
 
         mergeSort(nums, 0, len(nums) - 1)
         return nums
+
+```
+
+- **Bucket sort**
+When elements fall within a known, finite range, we can count the occurrences of each value in a first pass. For in-place sorting, we rewrite the original array sequentially using these counts without doing any traditional swaps.
+
+The main limitation is that you must know the exact range of values beforehand to allocate your counting buckets.
+
+```python
+# First pass: Count frequencies
+counts = {0: 0, 1: 0, 2: 0}
+for n in nums: 
+    counts[n] += 1
+
+# Second pass: Overwrite in-place
+i = 0
+for val in sorted(counts_map.keys()):
+    for _ in range(counts[val]):
+        nums[i] = val
+        i += 1
+```
+
+e.g., in [2, 0, 1, 2]
+Our counts are {0: 1, 1: 1, 2: 2}. We overwrite the array by filling one 0, one 1, and two 2s in order.
+
+- **Dutch National Flag**
+An expansion of the partitioning concept where we use boundaries to isolate elements. By using a left pointer l for 0s, a right pointer r for 2s, and a scanner i, we aggressively kick extremes to the edges, leaving 1s naturally trapped in the middle.
+
+The biggest challenge is managing the scanner i: when swapping a 2 from the right, the incoming element is completely un-scanned, so we must freeze i in place for an iteration to inspect it.
+
+e.g., in [1, 2, 0] with l=0, r=2, i=1 (pointing at 2)
+We swap index i and r, changing the array to [1, 0, 2]. We shrink the r boundary, but keep i=1 so we can inspect the newly arrived 0 on the next loop
+
+```python
+while i <= r:
+    if nums[i] == 0:
+        nums[i], nums[l] = nums[l], nums[i]
+        l += 1
+        i += 1
+    elif nums[i] == 2:
+        nums[i], nums[r] = nums[r], nums[i]
+        r -= 1 # Freeze i to inspect the incoming element
+    else:
+        i += 1
+```
+
+
+
