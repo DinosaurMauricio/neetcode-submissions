@@ -1,5 +1,7 @@
 ## Notes
 
+# Array and Two Pointers
+
 - **Length Prefixes** (Length + # + String)
 Instead of putting all lengths at the beginning (like 1,2,3#a,aa,aaa), putting the length directly before each word (1#a2#aa) is way faster and cleaner, this is because we read characters until we hit #. Whatever is before # is always the length of the string. For example, if the length is 5, the decoder immediately grabs the next 5 characters as the word and moves on.
 
@@ -233,6 +235,53 @@ while i <= r:
     else:
         i += 1
 ```
+# Stack
+
+- **MinStack (Two-Stack Approach)**
+We can use a secondary stack (minStack) to mirror the main stack's history. Using only one variable would break when that minimum is popped (because the element is not anymore on the stack), for this reson we we log the minimum element at each time. 
+
+By using both stacks, popping an element automatically reveals the previous minimum right at the top of the minStack.
+
+e.g., in [2, 5, 1]:
+* Push 2: stack = [2], minStack = [2]
+* Push 5: stack = [2, 5], minStack = [2, 2] (since 2 < 5)
+* Push 1: stack = [2, 5, 1], minStack = [2, 2, 1]
+When we pop 1, the minStack also pops, instantly restoring 2 as the historical minimum.
+
+```python
+def push(self, val: int) -> None:
+    self.stack.append(val)
+    # Grab the current min from the top, or use val if empty
+    val = min(val, self.minStack[-1] if self.minStack else val)
+    self.minStack.append(val)
+
+def pop(self) -> None:
+    self.stack.pop()
+    self.minStack.pop() # Automatically restores the previous minimum
 
 
+- **MinStack (Space Optimized Math / Tripwire Approach)**
+To optimize the previous approach and instead use only one variable, we use the difference between the incoming value and the current minimum: `val - self.min`.
 
+Its identical to the two-stack approach because we must keep track of history, but we use a negative value as a trigger. When we pop and see a negative, we think: "ok, this was a change that changed the min value", in case its a positve value there was no change the previous element was much bigger so it cannot be a min. To reconstruct the past, we "sum" (via double negatives) that stored difference back into our tracking variable to restore the exact minimum value that we beat before.
+
+
+e.g., with self.min = 2 and pushing 1:
+We push the difference 1 - 2 = -1 onto the stack and update self.min = 1. 
+When popping -1, the negative sign triggers an alarm: we reconstruct the old minimum by doing 1 - (-1) = 2, restoring what we beat before.
+
+Code snippet:
+def push(self, val: int) -> None:
+    if not self.stack:
+        self.stack.append(0)
+        self.min = val
+    else:
+        self.stack.append(val - self.min)
+        if val < self.min:
+            self.min = val
+
+def pop(self) -> None:
+    pop = self.stack.pop()
+    if pop < 0:
+        self.min = self.min - pop
+"""
