@@ -258,7 +258,7 @@ def push(self, val: int) -> None:
 def pop(self) -> None:
     self.stack.pop()
     self.minStack.pop() # Automatically restores the previous minimum
-
+```
 
 - **MinStack (Space Optimized Math / Tripwire Approach)**
 To optimize the previous approach and instead use only one variable, we use the difference between the incoming value and the current minimum: `val - self.min`.
@@ -270,7 +270,7 @@ e.g., with self.min = 2 and pushing 1:
 We push the difference 1 - 2 = -1 onto the stack and update self.min = 1. 
 When popping -1, the negative sign triggers an alarm: we reconstruct the old minimum by doing 1 - (-1) = 2, restoring what we beat before.
 
-Code snippet:
+```python
 def push(self, val: int) -> None:
     if not self.stack:
         self.stack.append(0)
@@ -284,4 +284,4 @@ def pop(self) -> None:
     pop = self.stack.pop()
     if pop < 0:
         self.min = self.min - pop
-"""
+```
