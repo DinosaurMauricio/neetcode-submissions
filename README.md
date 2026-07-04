@@ -235,6 +235,29 @@ while i <= r:
     else:
         i += 1
 ```
+
+- **Sliding window**
+Think of it like looking through a moving frame. If an array has 10 elements but our window size is 3, we can only see elements 0–2, then 1–3, then 2–4, etc. This is super useful for checking things within a specific range, like finding a duplicate nearby. We use two pointers to track the start and end of the window. We usually start at 0 and let the right side grow, shrinking the left side only when needed. A huge hint for this pattern is when a problem asks for something within a range of j - i <= k.
+
+The core mechanic relies on two pointers ($L$ and $R$). As $R$ expands the window to explore new elements, $L$ gets smaller it from behind whenever a constraint is violated (like the window size exceeding $k$).
+
+```python
+window = set()
+L = 0
+
+for R in range(len(nums)):
+    # Window grew past size k, slide the left side in
+    if R - L > k:
+        window.remove(nums[L])
+        L += 1
+    
+    # Check if we found a duplicate in our current window
+    if nums[R] in window:
+        return True
+    
+    window.add(nums[R])
+```
+
 # Stack
 
 - **MinStack (Two-Stack Approach)**
