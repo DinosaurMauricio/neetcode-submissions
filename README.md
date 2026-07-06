@@ -308,3 +308,26 @@ def pop(self) -> None:
     if pop < 0:
         self.min = self.min - pop
 ```
+
+- **Monotonic Stack & Sorting**
+When dealing with disordered, moving elements (like cars on a road), sorting them by position in descending order simplifies the problem by letting us evaluate interactions from front to back. 
+
+Instead of simulating the movement step-by-step with loops, we use a mathematical approach to calculate the time to destination upfront: `time = (target - position) / speed`. 
+
+The core mechanic relies on a monotonic stack to track fleets. If a car behind takes less than or equal time (`time <= stack[-1]`) to reach the target than the car ahead of it, it will inevitably catch up and join that fleet, so we ignore it. If it takes longer, it becomes the leader of a new, slower fleet.
+
+```python
+# Sort cars by position in descending order (closest to target first)
+cars_desc = sorted(zip(position, speed), reverse=True)
+stack = []
+
+for pos, spd in cars_desc:
+    time = (target - pos) / spd
+    # If the current car arrives sooner or at the same time as the fleet ahead,
+    # it catches up and merges. We skip adding it to the stack.
+    if stack and time <= stack[-1]:
+        continue
+    
+    stack.append(time)
+
+return len(stack)
