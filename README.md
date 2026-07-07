@@ -43,6 +43,18 @@ def longestConsecutive(self, nums: List[int]) -> int:
     return res
 ```
 
+- **Two Pointers (Area)**
+When a problem asks to maximize an area (like a rectangle), a great approach is putting pointers at the very start and end. This lets you start with the maximum possible width. From there, the trick is knowing which one to move: since the area is always limited by the shorter pillar, we keep the taller pillar still while the samller one move in its next direction till we find a smaller pillar.
+
+```python
+l, r = 0, len(height) - 1
+    #.... logic here
+    if height[l] < height[r]:
+        l += 1
+    else:
+        r -= 1
+```
+
 - **Two Pointers (Sorted Arrays)**
 When a problem specifies a "non-decreasing" (e.g. [1,2,3,4]) or sorted array we can place one pointer at the start (`left`) and one at the end (`right`), we can confidently shrink our search space based on the current sum relative to a target:
   * If `current_sum > target`: Move `right` inward to decrease the sum.
