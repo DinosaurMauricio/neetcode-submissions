@@ -341,5 +341,51 @@ for pos, spd in cars_desc:
         continue
     
     stack.append(time)
+```
 
-return len(stack)
+# Trees
+- **Traversing trees**
+To traverse trees the easiest way to do it is by using recursive methods.
+
+```python
+        def traverse(root):
+
+            if not root:
+                return 
+            traverse(root.left)
+            traverse(root.right)
+
+        traverse(root)
+```
+
+But you can also iterate with it with the help of a stack for example. In here we would have to traverse the left node till it is None, after that we can simply pop the last element (the leaf of the left node), process it, and go set the right node.
+```python
+        stack = []
+        current = root
+
+        while stack or current:
+            while current:
+                stack.append(current)
+                current = current.left
+            current = stack.pop().right
+```
+
+Previous solution is good for pre and in order traverse but for post we take a different approach, we can use another stack for validation. And we can organize the stack such that the last elements are pushed first and the left nodes which go first are added last:
+
+```python
+        res = []
+        stack, visited = [root], [False]
+
+        while stack:
+            node, v = stack.pop(), visited.pop()
+            if node:
+                if v:
+                    res.append(node.val)
+                else:
+                    stack.append(node)
+                    visited.append(True)
+                    stack.append(node.right)
+                    visited.append(False)
+                    stack.append(node.left)
+                    visited.append(False)
+```
