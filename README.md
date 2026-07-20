@@ -389,3 +389,26 @@ Previous solution is good for pre and in order traverse but for post we take a d
                     stack.append(node.left)
                     visited.append(False)
 ```
+
+# Sliding Window
+
+- **Character Replacement (Sliding Window)**
+A dynamic window concept where we stretch right `r` to explore and shrink left `l` to keep things valid. We count the frequency of our most popular character (`maxf`), and the difference between total window size and `maxf` is the key. 
+
+If there’s a huge difference, it means we have way more of one character than others. We then ask: "How many other characters do we have to swap?" If the count is above `k` we move `l` to the right to remove elements from the back until it's okay again.
+
+e.g., in "AABABBA" with `k=1`, suppose our window is `[A, A, B, C]` (`l=0, r=3`).
+Window size is 4, max char (`A`) is 2. The difference is `4 - 2 = 2` other characters. Since `2 > k`, we move `l += 1` to kick elements out from the back until the difference is back down to $\le 1$.
+
+```python
+for r in range(len(s)):
+    count[s[r]] = 1 + count.get(s[r], 0)
+    maxf = max(maxf, count[s[r]])
+
+    # If non-major characters exceed k, shrink window from the left
+    while (r - l + 1) - maxf > k:
+        count[s[l]] -= 1
+        l += 1
+        
+    res = max(res, r - l + 1)
+```
