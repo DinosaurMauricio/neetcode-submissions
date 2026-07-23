@@ -409,6 +409,7 @@ for r in range(len(s)):
     while (r - l + 1) - maxf > k:
         count[s[l]] -= 1
         l += 1
+    res = max(res, r - l + 1)
 ```
 
 # Binary Search
@@ -447,6 +448,4 @@ def upper_bound(nums, target):
         else:
             l = m + 1  # Target or smaller; step left wall past m
     return l
-```
-    res = max(res, r - l + 1)
 ```
