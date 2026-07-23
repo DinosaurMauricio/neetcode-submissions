@@ -409,6 +409,44 @@ for r in range(len(s)):
     while (r - l + 1) - maxf > k:
         count[s[l]] -= 1
         l += 1
-        
+```
+
+# Binary Search
+- **Binary Search: Lower & Upper Bounds**
+An extension of binary search where instead of stopping at the first target match, two boundary pointers `l` and `r` squeeze together to trap the outer edges of a repeated target value or insertion point.
+
+The biggest challenge is knowing *which* pointer pushes forward when `nums[m] == target`:
+- **Lower Bound (`>= target`):** Finds the **first** occurrence. When `nums[m] == target`, `r` treats it as "far enough right" and shrinks left (`r = m`) to search for an earlier match. `l` only steps forward (`l = m + 1`) when `nums[m]` is strictly smaller than the target.
+- **Upper Bound (`> target`):** Finds the **first element strictly greater** than the target. When `nums[m] == target`, `l` treats it as "too small" and steps right past it (`l = m + 1`). `r` shrinks left (`r = m`) only when `nums[m]` is strictly greater than the target.
+
+e.g., in `[1, 3, 5, 5, 5, 8]` searching for target `5`:
+For **Lower Bound**, hitting `nums[2] = 5` makes `r` pull left to index 2 to see if an earlier 5 exists. 
+For **Upper Bound**, hitting `nums[2] = 5` makes `l` push past it to index 3 to find the first element *after* the 5s.
+
+Both algorithms end when `l == r`, leaving `l` standing on the target boundary.
+
+```python
+# Lower Bound: First index where nums[i] >= target
+def lower_bound(nums, target):
+    l, r = 0, len(nums)
+    while l < r:
+        m = l + (r - l) // 2
+        if nums[m] >= target:
+            r = m      # Target found or exceeded; shrink right wall left
+        else:
+            l = m + 1  # Too small; step left wall past m
+    return l
+
+# Upper Bound: First index where nums[i] > target
+def upper_bound(nums, target):
+    l, r = 0, len(nums)
+    while l < r:
+        m = l + (r - l) // 2
+        if nums[m] > target:
+            r = m      # Strictly greater found; shrink right wall left
+        else:
+            l = m + 1  # Target or smaller; step left wall past m
+    return l
+```
     res = max(res, r - l + 1)
 ```
