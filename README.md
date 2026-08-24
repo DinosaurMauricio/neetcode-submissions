@@ -449,3 +449,21 @@ def upper_bound(nums, target):
             l = m + 1  # Target or smaller; step left wall past m
     return l
 ```
+
+- **Check If a Number Is Majority Element in a Sorted Array**
+Instead of using a loop to count elements, we use binary search to find the start, then make a single jump to check if the target reaches the majority threshold. Because identical elements are grouped together in a sorted array, a majority element must extend across a continuous block.
+
+The core idea is checking a specific endpoint: we use `lower_bound` to find `first_idx`, then jump `len(nums) // 2` positions ahead. We don't need to know where the block ends, we just need to verify that the target is still present at that minimum required index to confirm it appears enough times.
+
+```python
+while l <= r:
+            mid = l + (r - l) // 2
+            if nums[mid] >= target:
+                first_idx = mid
+                r = mid - 1
+            else:
+                l = mid + 1
+```
+
+e.g., in `nums = [2, 4, 5, 5, 5, 5, 5, 6, 6]` with `target = 5` and $N = 9$
+`lower_bound` finds `first_idx = 2`. The majority threshold requires at least 5 occurrences. We check `first_idx + 4` (index `6`). Since `nums[6]` is `5`, the target is guaranteed to be a majority element.
